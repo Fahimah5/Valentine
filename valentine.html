@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will You Be My Valentine?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink-bg-1:#ffe3ea;
+    --pink-bg-2:#ffc2d1;
+    --pink-bg-3:#ffb3c6;
+    --rose:#ff4d6d;
+    --rose-dark:#e8395a;
+    --cream:#fffaf9;
+    --brown:#caa6a0;
+    --gold:#ffd166;
+    --text:#7a3b46;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    height:100%;
+    overflow:hidden;
+    font-family:'Quicksand', sans-serif;
+    color:var(--text);
+  }
+
+  body{
+    background:linear-gradient(135deg, var(--pink-bg-1), var(--pink-bg-2) 55%, var(--pink-bg-3));
+    position:relative;
+  }
+
+  /* ambient floating hearts in the background */
+  .ambient{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    overflow:hidden;
+  }
+  .ambient span{
+    position:absolute;
+    bottom:-10%;
+    font-size:1.4rem;
+    opacity:.35;
+    animation:drift linear infinite;
+    color:var(--rose);
+  }
+  @keyframes drift{
+    0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:0; }
+    10%{ opacity:.35; }
+    90%{ opacity:.25; }
+    100%{ transform:translateY(-115vh) translateX(20px) rotate(25deg); opacity:0; }
+  }
+
+  .scene{
+    position:fixed;
+    inset:0;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px;
+    z-index:1;
+  }
+  .scene.active{ display:flex; }
+
+  /* ---------- Scene 1 ---------- */
+  .title{
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+    font-size:clamp(2.2rem, 7vw, 3.6rem);
+    color:var(--rose-dark);
+    margin:0 0 36px 0;
+    text-shadow:0 2px 0 rgba(255,255,255,.5);
+    animation:pop-in .7s ease;
+  }
+
+  .box-btn{
+    font-family:'Baloo 2', cursive;
+    font-size:1.3rem;
+    font-weight:700;
+    color:#fff;
+    background:var(--rose);
+    border:none;
+    padding:18px 48px;
+    border-radius:20px;
+    cursor:pointer;
+    box-shadow:0 10px 0 var(--rose-dark), 0 14px 24px rgba(0,0,0,.15);
+    transition:transform .15s ease;
+    animation:breathe 2s ease-in-out infinite;
+  }
+  .box-btn:hover{ transform:translateY(-3px); }
+  .box-btn:active{ transform:translateY(4px); box-shadow:0 6px 0 var(--rose-dark); }
+
+  @keyframes breathe{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.05); }
+  }
+  @keyframes pop-in{
+    0%{ opacity:0; transform:translateY(-14px) scale(.9); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  /* ---------- Scene 2 ---------- */
+  .card{
+    background:var(--cream);
+    border-radius:32px;
+    padding:32px 36px 28px;
+    box-shadow:0 20px 50px rgba(170,60,90,.25);
+    max-width:380px;
+    width:100%;
+    animation:pop-in .5s ease;
+  }
+
+  .bear{
+    width:150px;
+    margin:0 auto 6px;
+    animation:sway 3.5s ease-in-out infinite;
+    transform-origin:bottom center;
+  }
+  @keyframes sway{
+    0%,100%{ transform:rotate(-2deg); }
+    50%{ transform:rotate(2deg); }
+  }
+
+  .question{
+    font-family:'Baloo 2', cursive;
+    font-size:1.5rem;
+    color:var(--rose-dark);
+    margin:6px 0 6px;
+  }
+
+  .caption{
+    min-height:22px;
+    font-size:.95rem;
+    color:var(--text);
+    opacity:.8;
+    margin-bottom:18px;
+  }
+
+  .buttons{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+    min-height:70px;
+  }
+
+  .btn{
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+    border:none;
+    border-radius:16px;
+    cursor:pointer;
+    transition:transform .12s ease, opacity .3s ease;
+    white-space:nowrap;
+  }
+
+  .yes-btn{
+    background:var(--rose);
+    color:#fff;
+    font-size:1.15rem;
+    padding:14px 30px;
+    box-shadow:0 8px 0 var(--rose-dark);
+  }
+  .yes-btn:active{ transform:translateY(4px); box-shadow:0 4px 0 var(--rose-dark); }
+
+  .no-btn{
+    background:#fff;
+    color:var(--rose-dark);
+    font-size:1.1rem;
+    padding:14px 28px;
+    border:2px solid var(--rose);
+    box-shadow:0 6px 0 #f3c4cf;
+  }
+  .no-btn:active{ transform:translateY(3px); }
+
+  /* ---------- Scene 3 : celebration ---------- */
+  .celebrate-text{
+    font-family:'Baloo 2', cursive;
+    font-size:clamp(1.8rem, 6vw, 3rem);
+    color:var(--rose-dark);
+    text-shadow:0 2px 0 rgba(255,255,255,.6);
+    animation:celebrate-pop .6s ease;
+    max-width:90vw;
+  }
+  .celebrate-sub{
+    font-size:1.1rem;
+    margin-top:8px;
+    color:var(--text);
+  }
+  @keyframes celebrate-pop{
+    0%{ opacity:0; transform:scale(.5) rotate(-8deg); }
+    60%{ opacity:1; transform:scale(1.15) rotate(3deg); }
+    100%{ transform:scale(1) rotate(0deg); }
+  }
+
+  .happy-bear{
+    width:130px;
+    margin:18px auto 4px;
+    animation:bounce-in .7s ease .2s both, sway 3.5s ease-in-out 1s infinite;
+    transform-origin:bottom center;
+  }
+  @keyframes bounce-in{
+    0%{ opacity:0; transform:translateY(20px) scale(.7); }
+    70%{ opacity:1; transform:translateY(-6px) scale(1.08); }
+    100%{ transform:translateY(0) scale(1); }
+  }
+
+  .signature{
+    font-family:'Baloo 2', cursive;
+    font-size:clamp(1.4rem, 5vw, 2rem);
+    color:var(--rose-dark);
+    margin-top:14px;
+    animation:celebrate-pop .6s ease .4s both;
+  }
+
+  #heartsContainer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:2;
+    overflow:hidden;
+  }
+  .falling-heart{
+    position:absolute;
+    bottom:-10%;
+    animation-name:rise;
+    animation-timing-function:linear;
+  }
+  @keyframes rise{
+    0%{ transform:translateY(0) rotate(0deg); opacity:1; }
+    100%{ transform:translateY(-115vh) rotate(360deg); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient" id="ambient"></div>
+
+<!-- Scene 1: greeting -->
+<div class="scene active" id="scene1">
+  <h1 class="title">Hello, My Love</h1>
+  <button class="box-btn" id="openBox">Click</button>
+</div>
+
+<!-- Scene 2: the question -->
+<div class="scene" id="scene2">
+  <div class="card">
+    <div class="bear">
+      <svg viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg">
+        <!-- ears -->
+        <circle cx="48" cy="38" r="24" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+        <circle cx="152" cy="38" r="24" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+        <circle cx="48" cy="38" r="11" fill="#ffd6e0"/>
+        <circle cx="152" cy="38" r="11" fill="#ffd6e0"/>
+        <!-- body -->
+        <ellipse cx="100" cy="178" rx="58" ry="34" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+        <!-- arms -->
+        <circle cx="55" cy="168" r="17" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+        <circle cx="145" cy="168" r="17" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+        <!-- heart held by paws -->
+        <path d="M100 144 C 88 130, 64 134, 64 153 C 64 170, 100 192, 100 192 C 100 192, 136 170, 136 153 C 136 134, 112 130, 100 144 Z" fill="#ff4d6d"/>
+        <!-- head -->
+        <circle cx="100" cy="92" r="62" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+        <!-- blush -->
+        <ellipse cx="62" cy="104" rx="11" ry="7" fill="#ffc2d1" opacity=".8"/>
+        <ellipse cx="138" cy="104" rx="11" ry="7" fill="#ffc2d1" opacity=".8"/>
+        <!-- snout -->
+        <ellipse cx="100" cy="108" rx="29" ry="21" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+        <circle cx="100" cy="101" r="7" fill="#7a3b46"/>
+        <path d="M100 108 L100 114" stroke="#7a3b46" stroke-width="2" stroke-linecap="round"/>
+        <path d="M90 116 Q100 124 110 116" stroke="#7a3b46" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- eyes -->
+        <circle cx="76" cy="82" r="5.5" fill="#3a2e2e"/>
+        <circle cx="124" cy="82" r="5.5" fill="#3a2e2e"/>
+        <circle cx="78" cy="80" r="1.6" fill="#fff"/>
+        <circle cx="126" cy="80" r="1.6" fill="#fff"/>
+      </svg>
+    </div>
+    <h2 class="question">Will you be my Valentine?</h2>
+    <div class="caption" id="caption"></div>
+    <div class="buttons">
+      <button class="btn yes-btn" id="yesBtn">Yes</button>
+      <button class="btn no-btn" id="noBtn">No</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scene 3: celebration -->
+<div class="scene" id="scene3">
+  <h1 class="celebrate-text">Yay! 🎉 You just made me the happiest!</h1>
+  <div class="celebrate-sub">Happy Valentine's Day, my love. 💕</div>
+  <div class="happy-bear">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- ears -->
+      <circle cx="48" cy="38" r="24" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+      <circle cx="152" cy="38" r="24" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+      <circle cx="48" cy="38" r="11" fill="#ffd6e0"/>
+      <circle cx="152" cy="38" r="11" fill="#ffd6e0"/>
+      <!-- arms up, cheering -->
+      <ellipse cx="30" cy="135" rx="13" ry="20" fill="#ffffff" stroke="#e9d6d2" stroke-width="3" transform="rotate(-30 30 135)"/>
+      <ellipse cx="170" cy="135" rx="13" ry="20" fill="#ffffff" stroke="#e9d6d2" stroke-width="3" transform="rotate(30 170 135)"/>
+      <!-- body -->
+      <ellipse cx="100" cy="160" rx="56" ry="34" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+      <!-- little heart on chest -->
+      <path d="M100 148 C 95 141, 84 143, 84 152 C 84 160, 100 170, 100 170 C 100 170, 116 160, 116 152 C 116 143, 105 141, 100 148 Z" fill="#ff4d6d"/>
+      <!-- head -->
+      <circle cx="100" cy="92" r="62" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+      <!-- blush -->
+      <ellipse cx="62" cy="104" rx="12" ry="7" fill="#ffc2d1" opacity=".85"/>
+      <ellipse cx="138" cy="104" rx="12" ry="7" fill="#ffc2d1" opacity=".85"/>
+      <!-- snout -->
+      <ellipse cx="100" cy="108" rx="29" ry="21" fill="#ffffff" stroke="#e9d6d2" stroke-width="3"/>
+      <circle cx="100" cy="101" r="7" fill="#7a3b46"/>
+      <path d="M100 108 L100 112" stroke="#7a3b46" stroke-width="2" stroke-linecap="round"/>
+      <!-- big happy open smile -->
+      <path d="M86 114 Q100 130 114 114" stroke="#7a3b46" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- happy closed eyes (curved) -->
+      <path d="M68 80 Q76 70 84 80" stroke="#3a2e2e" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M116 80 Q124 70 132 80" stroke="#3a2e2e" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <!-- sparkle -->
+      <text x="158" y="48" font-size="22">✨</text>
+      <text x="20" y="58" font-size="18">✨</text>
+    </svg>
+  </div>
+  <div class="signature">Fahimah loves you 🥰</div>
+</div>
+
+<div id="heartsContainer"></div>
+
+<script>
+  // ambient background hearts
+  const ambient = document.getElementById('ambient');
+  const ambientEmojis = ['❤️','💗','💖'];
+  for(let i=0;i<14;i++){
+    const s = document.createElement('span');
+    s.textContent = ambientEmojis[Math.floor(Math.random()*ambientEmojis.length)];
+    s.style.left = Math.random()*100 + '%';
+    s.style.fontSize = (1 + Math.random()*1.2) + 'rem';
+    s.style.animationDuration = (10 + Math.random()*10) + 's';
+    s.style.animationDelay = (Math.random()*10) + 's';
+    ambient.appendChild(s);
+  }
+
+  const scene1 = document.getElementById('scene1');
+  const scene2 = document.getElementById('scene2');
+  const scene3 = document.getElementById('scene3');
+  const openBox = document.getElementById('openBox');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const caption = document.getElementById('caption');
+  const heartsContainer = document.getElementById('heartsContainer');
+
+  openBox.addEventListener('click', () => {
+    scene1.classList.remove('active');
+    scene2.classList.add('active');
+  });
+
+  const teases = [
+    "Are you sure? 🥺",
+    "Really sure?",
+    "Pretty please? 🍓",
+    "Think again! 💭",
+    "I'll be sad...",
+    "Don't do this to the bear 🐻",
+    "He's holding a heart for you!",
+    "Last chances are precious...",
+    "Almost out of clicks!",
+    "Okay okay, one more try 🙏"
+  ];
+
+  let noCount = 0;
+  const maxNo = 10;
+
+  noBtn.addEventListener('click', () => {
+    if(noCount >= maxNo) return;
+    noCount++;
+
+    const noScale = Math.max(0.12, 1 - noCount * 0.09);
+    const yesScale = 1 + noCount * 0.16;
+
+    noBtn.style.transform = `scale(${noScale})`;
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    caption.textContent = teases[noCount - 1] || '';
+
+    if(noCount >= maxNo){
+      noBtn.style.opacity = '0';
+      noBtn.style.pointerEvents = 'none';
+      setTimeout(() => { noBtn.style.display = 'none'; }, 350);
+      caption.textContent = "Guess that's a yes waiting to happen 😏";
+    }
+  });
+
+  yesBtn.addEventListener('click', () => {
+    scene2.classList.remove('active');
+    scene3.classList.add('active');
+    startHeartBurst();
+  });
+
+  function startHeartBurst(){
+    const emojis = ['❤️','💖','💕','💗','💓','✨','💘'];
+    const spawn = () => {
+      const h = document.createElement('div');
+      h.className = 'falling-heart';
+      h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      h.style.left = Math.random()*100 + '%';
+      h.style.fontSize = (1.2 + Math.random()*2) + 'rem';
+      const duration = 3 + Math.random()*3;
+      h.style.animationDuration = duration + 's';
+      heartsContainer.appendChild(h);
+      h.addEventListener('animationend', () => h.remove());
+    };
+    // initial big burst
+    for(let i=0;i<40;i++) setTimeout(spawn, i*30);
+    // continuous gentle rain after
+    setInterval(spawn, 180);
+  }
+</script>
+</body>
+</html>
